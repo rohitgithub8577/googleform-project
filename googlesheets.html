@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Registration</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #74ABE2, #5563DE);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .form-container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      padding: 30px;
+      width: 90%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .form-container h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    input, textarea {
+      width: 90%;
+      padding: 12px 15px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #5563DE;
+      box-shadow: 0 0 4px #5563DE;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: space-between;
+      width: 90%;
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .submit-btn {
+      flex: 1;
+      background: #5563DE;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .submit-btn:hover {
+      background: #3b49c4;
+    }
+
+    .download-btn {
+      background: #2E7D32;
+      color: white;
+      border: none;
+      padding: 12px 10px;
+      border-radius: 12px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .download-btn:hover {
+      background: #1B5E20;
+    }
+
+    .success-message {
+      text-align: center;
+      color: green;
+      font-weight: 500;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Register Here</h2>
+    <input type="text" id="name" placeholder="Enter your name" required />
+    <input type="text" id="mobile" placeholder="Enter your mobile" required />
+    <input type="email" id="email" placeholder="Enter your email" required />
+    <textarea id="address" rows="3" placeholder="Enter your address"></textarea>
+
+    <!-- Button group -->
+    <div class="btn-group">
+      <button class="submit-btn" onclick="submitForm()">Submit</button>
+      <button class="download-btn" onclick="downloadSheet()">Download</button>
+    </div>
+
+    <p class="success-message" id="msg">✅ Submitted Successfully!</p>
+  </div>
+<script>
+async function submitForm() {
+  const name = document.getElementById('name').value.trim();
+  const mobile = document.getElementById('mobile').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const address = document.getElementById('address').value.trim();
+  const msg = document.getElementById('msg');
+
+  if (!name || !mobile || !email || !address) {
+    alert("Please fill all fields!");
+    return;
+  }
+
+  const data = { name, mobile, email, address };
+  const scriptURL = "https://script.google.com/macros/s/AKfycbxSBNO3nloaoTQFoUN6u4p3UIApNF4ulPhhZkRBV0F7fQmfVWM7ZNiREoN-uvGqTErG/exec"; // <-- apna URL yahan daalna
+
+  try {
+    await fetch(scriptURL, {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" }
+    });
+
+    msg.style.display = "block";
+    setTimeout(() => { msg.style.display = "none"; }, 3000);
+    document.querySelectorAll("input, textarea").forEach(el => el.value = "");
+  } catch (err) {
+    alert("Error: " + err.message);
+  }
+}
+
+
+function downloadSheet() {
+      // 👇 Tumhara Sheet ID
+      const sheetID = "1nuuqrhQVDZE4Jq8GvMlEQ1q0peRwsKwNnHvHkgwewdI";
+      
+      // 👇 Direct Excel download link format
+      const downloadURL = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=xlsx`;
+
+      // 👇 Open the link (starts download automatically)
+      window.open(downloadURL, "_blank");
+    }
+</script>
+
+</body>
+</html>
